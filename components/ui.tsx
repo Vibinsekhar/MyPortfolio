@@ -85,18 +85,11 @@ const wordmarkSizes = {
 } as const
 
 /**
- * The wordmark: the name in Syne, with a ring drawn around its first "O" the
- * way the style guide's logo does. Names without an "O" get the ring appended,
- * so this never breaks on a different name.
+ * One name in the logo's shape: a ring drawn around its first "O", the way the
+ * style guide's mark does. Names without an "O" get the ring appended, so this
+ * never breaks on a different name.
  */
-export function Wordmark({
-  size = "sm",
-  className = "",
-}: {
-  size?: keyof typeof wordmarkSizes
-  className?: string
-}) {
-  const name = site.name.toUpperCase()
+function nameWithRing(name: string) {
   const ringIndex = name.indexOf("O")
 
   const ring = (
@@ -106,24 +99,61 @@ export function Wordmark({
     />
   )
 
+  if (ringIndex === -1) {
+    return (
+      <>
+        {name}
+        <span className="relative ml-2 inline-block size-[0.5em] align-middle">{ring}</span>
+      </>
+    )
+  }
+
+  return (
+    <>
+      {name.slice(0, ringIndex)}
+      <span className="relative inline-block">
+        {name[ringIndex]}
+        {ring}
+      </span>
+      {name.slice(ringIndex + 1)}
+    </>
+  )
+}
+
+/**
+ * The wordmark: the name in Syne. In the header it drops to `site.shortName`
+ * on phones, where the full name would crowd the theme toggle and the menu
+ * button; the footer always has the room for the whole thing.
+ */
+export function Wordmark({
+  size = "sm",
+  className = "",
+}: {
+  size?: keyof typeof wordmarkSizes
+  className?: string
+}) {
+  const full = site.name.toUpperCase()
+  const short = site.shortName ? site.shortName.toUpperCase() : full
+  const shortens = size === "sm" && short !== full
+
   return (
     <span
       className={`whitespace-nowrap font-display font-bold text-fg ${wordmarkSizes[size]} ${className}`}
     >
-      {ringIndex === -1 ? (
+      {shortens ? (
         <>
-          {name}
-          <span className="relative ml-2 inline-block size-[0.5em] align-middle">{ring}</span>
+          {/* Both forms sit in the DOM and CSS picks one, so the name is
+              announced once from here instead of twice from the two spans. */}
+          <span className="sr-only">{site.name}</span>
+          <span aria-hidden className="sm:hidden">
+            {nameWithRing(short)}
+          </span>
+          <span aria-hidden className="hidden sm:inline">
+            {nameWithRing(full)}
+          </span>
         </>
       ) : (
-        <>
-          {name.slice(0, ringIndex)}
-          <span className="relative inline-block">
-            {name[ringIndex]}
-            {ring}
-          </span>
-          {name.slice(ringIndex + 1)}
-        </>
+        nameWithRing(full)
       )}
     </span>
   )

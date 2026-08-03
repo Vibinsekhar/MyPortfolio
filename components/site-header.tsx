@@ -65,20 +65,29 @@ export function SiteHeader() {
     return () => observer.disconnect()
   }, [links])
 
-  // Close the mobile menu on Escape, and stop the page scrolling behind it.
+  // While the menu is open: Escape closes it, the page behind it stops
+  // scrolling, and growing past `md` closes it too — the panel is `md:hidden`,
+  // so without that a rotate to landscape would hide the menu and leave the
+  // scroll lock behind with no way to release it.
   useEffect(() => {
     if (!menuOpen) return
 
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") setMenuOpen(false)
     }
+    const desktop = window.matchMedia("(min-width: 768px)")
+    const onBreakpoint = () => {
+      if (desktop.matches) setMenuOpen(false)
+    }
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = "hidden"
     window.addEventListener("keydown", onKeyDown)
+    desktop.addEventListener("change", onBreakpoint)
 
     return () => {
       document.body.style.overflow = previousOverflow
       window.removeEventListener("keydown", onKeyDown)
+      desktop.removeEventListener("change", onBreakpoint)
     }
   }, [menuOpen])
 
@@ -90,7 +99,7 @@ export function SiteHeader() {
           : "border-b border-transparent"
       }`}
     >
-      <div className="mx-auto flex h-20 w-full max-w-6xl items-center justify-between gap-6 px-6">
+      <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between gap-3 px-6 sm:h-20 sm:gap-6">
         <a href="#top" className="shrink-0" aria-label="Back to top">
           <Wordmark />
         </a>
@@ -110,7 +119,7 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           <ThemeToggle />
           {contact ? (
             <Button href="#contact" variant="subtle" size="sm" className="hidden sm:inline-flex">
@@ -134,7 +143,10 @@ export function SiteHeader() {
         <nav
           id="mobile-nav"
           aria-label="Mobile"
-          className="border-t border-border bg-bg md:hidden"
+          /* The panel sits in the flow under a 4rem header, and the body is
+             scroll-locked while it is open — so it has to scroll itself, or a
+             long nav on a short (landscape) viewport would be unreachable. */
+          className="max-h-[calc(100svh-4rem)] overflow-y-auto overscroll-contain border-t border-border bg-bg sm:max-h-[calc(100svh-5rem)] md:hidden"
         >
           <ul className="mx-auto flex w-full max-w-6xl flex-col px-6 py-2">
             {links.map((link) => (
@@ -142,6 +154,7 @@ export function SiteHeader() {
                 <a
                   href={`#${link.id}`}
                   onClick={() => setMenuOpen(false)}
+                  aria-current={active === link.id ? "true" : undefined}
                   className={`block border-b border-border py-4 text-sm font-medium uppercase tracking-[0.18em] last:border-0 ${
                     active === link.id ? "text-accent" : "text-fg"
                   }`}

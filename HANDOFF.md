@@ -73,6 +73,8 @@ Everything in the original plan, plus the design system above.
 - `content/site.ts` — typed content model. Extended during the design pass with
   `site.headline`, `site.photo`, `site.phone`, `site.address`,
   `Project.image`, the `testimonials` array, and three more social icons.
+  `site.shortName` was added later — the header wordmark shows it below the
+  `sm` breakpoint (set it to `null` to always show the full name).
 - `app/globals.css` — tokens for both themes, `grid-backdrop`, `page-glow`,
   scroll-reveal base styles (scoped to `.js`, see below)
 - `app/layout.tsx` — Syne + Rubik, metadata + viewport from `site`, no-flash
