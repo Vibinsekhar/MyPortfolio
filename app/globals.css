@@ -1,0 +1,225 @@
+@import "tailwindcss";
+
+/* Class-based dark mode — toggled on <html> by components/theme-toggle.tsx.
+   Dark is the default: the design is a dark theme first, and light is a
+   courtesy variant. See the inline script in app/layout.tsx. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Light variant — derived from the style guide's greyscale ramp.
+   The accent is darkened here so orange-on-white clears WCAG AA. */
+:root {
+  --bg: #f9fafb;
+  --surface: #ffffff;
+  --surface-2: #f4f4f6;
+  --border: #e5e6eb;
+  --border-strong: #d3d5da;
+  --fg: #161d21;
+  --muted: #6c727f;
+  --accent: #c96a17;
+  --accent-hover: #a95610;
+  --accent-contrast: #ffffff;
+  --accent-soft: rgba(201, 106, 23, 0.1);
+  --grid: rgba(22, 29, 33, 0.05);
+  --glow: rgba(22, 29, 33, 0.06);
+}
+
+/* The design as drawn. */
+.dark {
+  --bg: #191919;
+  --surface: #202225;
+  --surface-2: #262a2c;
+  --border: #2e3234;
+  --border-strong: #3d4245;
+  --fg: #ffffff;
+  --muted: #9ea3ae;
+  --accent: #f89a4d;
+  --accent-hover: #ffab68;
+  --accent-contrast: #191919;
+  --accent-soft: rgba(248, 154, 77, 0.12);
+  --grid: rgba(255, 255, 255, 0.04);
+  --glow: rgba(255, 255, 255, 0.09);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-contrast: var(--accent-contrast);
+  --color-accent-soft: var(--accent-soft);
+
+  /* Style guide: Syne for headlines, Rubik for everything else. */
+  --font-display: var(--font-syne);
+  --font-sans: var(--font-rubik);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    /* Offset for the sticky header when jumping to #sections */
+    scroll-padding-top: 6rem;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans), system-ui, sans-serif;
+  }
+
+  ::selection {
+    background-color: var(--accent);
+    color: var(--accent-contrast);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+@utility grid-backdrop {
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 20%, transparent 75%);
+}
+
+/* The soft top-corner light every page in the design opens with. */
+@utility page-glow {
+  background-image: radial-gradient(
+    60% 50% at 22% 0%,
+    var(--glow) 0%,
+    transparent 70%
+  );
+}
+
+/* Hairline that trails a card title, as on the project cards. */
+@utility trailing-rule {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: var(--border-strong);
+}
+
+/* ---------------------------------------------------------------------------
+   Custom cursor — see components/cursor.tsx.
+
+   The component only mounts for a fine pointer with motion allowed, and it
+   adds `cursor-none` to <html> itself, so none of this can strand a visitor
+   without a pointer. Every transition is transform/opacity/colour only.
+   ------------------------------------------------------------------------- */
+.cursor-none,
+.cursor-none * {
+  cursor: none !important;
+}
+
+.cursor-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 200ms ease-out;
+}
+
+/* JS writes the translate here; the shape inside handles the scale, so the two
+   never fight over one transform. */
+.cursor-ring,
+.cursor-dot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  will-change: transform;
+}
+
+.cursor-ring-shape,
+.cursor-ring-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.cursor-ring-shape {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 9999px;
+  border: 1px solid var(--border-strong);
+  transform: translate(-50%, -50%) scale(var(--cursor-scale, 1));
+  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 200ms ease-out, border-color 200ms ease-out;
+}
+
+.cursor-ring-label {
+  transform: translate(-50%, -50%);
+  color: var(--accent-contrast);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 160ms ease-out;
+}
+
+.cursor-dot {
+  width: 0.375rem;
+  height: 0.375rem;
+  border-radius: 9999px;
+  background-color: var(--accent);
+  transition: opacity 200ms ease-out;
+}
+
+/* Over a link or button: the ring opens and tints. */
+.cursor-layer[data-cursor-state="interactive"] {
+  --cursor-scale: 1.75;
+}
+.cursor-layer[data-cursor-state="interactive"] .cursor-ring-shape {
+  background-color: var(--accent-soft);
+  border-color: var(--accent);
+}
+
+/* Over something with a data-cursor-label: solid accent, and the word shows. */
+.cursor-layer[data-cursor-state="labelled"] {
+  --cursor-scale: 2.5;
+}
+.cursor-layer[data-cursor-state="labelled"] .cursor-ring-shape {
+  background-color: var(--accent);
+  border-color: var(--accent);
+}
+.cursor-layer[data-cursor-state="labelled"] .cursor-ring-label {
+  opacity: 1;
+}
+
+/* The dot would only sit in the middle of an open ring, so it steps aside. */
+.cursor-layer:not([data-cursor-state="idle"]) .cursor-dot {
+  opacity: 0;
+}
+
+/* Click feedback. */
+.cursor-layer.is-pressed {
+  --cursor-scale: 0.8;
+}
+.cursor-layer.is-pressed[data-cursor-state="labelled"] {
+  --cursor-scale: 2.25;
+}
+
+/* Scroll-reveal — see components/reveal.tsx. Elements only start hidden when
+   JS is available to reveal them, so content stays visible without it. The
+   `js` class is added to <html> by the inline script in app/layout.tsx. */
+@media (prefers-reduced-motion: no-preference) {
+  .js [data-reveal] {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  }
+  .js [data-reveal="shown"] {
+    opacity: 1;
+    transform: none;
+  }
+}
