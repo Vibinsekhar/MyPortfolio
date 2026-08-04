@@ -79,17 +79,27 @@ export function Label({
 }
 
 const wordmarkSizes = {
-  /** Header — stays on one line next to the nav on a narrow phone. */
-  sm: "text-sm tracking-[0.1em] sm:text-base sm:tracking-[0.14em]",
+  /** Header — the name never wraps or clips, so the type steps down instead to
+      stay on one line beside the round buttons on a narrow phone. */
+  sm:
+    "text-[13px] tracking-[0.04em] min-[380px]:text-sm min-[380px]:tracking-[0.08em] " +
+    "sm:text-base sm:tracking-[0.14em]",
   lg: "text-xl tracking-[0.12em] sm:text-2xl sm:tracking-[0.14em]",
 } as const
 
 /**
- * One name in the logo's shape: a ring drawn around its first "O", the way the
- * style guide's mark does. Names without an "O" get the ring appended, so this
- * never breaks on a different name.
+ * The wordmark: the name in Syne, with a ring drawn around its first "O" the
+ * way the style guide's logo does. Names without an "O" get the ring appended,
+ * so this never breaks on a different name.
  */
-function nameWithRing(name: string) {
+export function Wordmark({
+  size = "sm",
+  className = "",
+}: {
+  size?: keyof typeof wordmarkSizes
+  className?: string
+}) {
+  const name = site.name.toUpperCase()
   const ringIndex = name.indexOf("O")
 
   const ring = (
@@ -99,61 +109,24 @@ function nameWithRing(name: string) {
     />
   )
 
-  if (ringIndex === -1) {
-    return (
-      <>
-        {name}
-        <span className="relative ml-2 inline-block size-[0.5em] align-middle">{ring}</span>
-      </>
-    )
-  }
-
-  return (
-    <>
-      {name.slice(0, ringIndex)}
-      <span className="relative inline-block">
-        {name[ringIndex]}
-        {ring}
-      </span>
-      {name.slice(ringIndex + 1)}
-    </>
-  )
-}
-
-/**
- * The wordmark: the name in Syne. In the header it drops to `site.shortName`
- * on phones, where the full name would crowd the theme toggle and the menu
- * button; the footer always has the room for the whole thing.
- */
-export function Wordmark({
-  size = "sm",
-  className = "",
-}: {
-  size?: keyof typeof wordmarkSizes
-  className?: string
-}) {
-  const full = site.name.toUpperCase()
-  const short = site.shortName ? site.shortName.toUpperCase() : full
-  const shortens = size === "sm" && short !== full
-
   return (
     <span
       className={`whitespace-nowrap font-display font-bold text-fg ${wordmarkSizes[size]} ${className}`}
     >
-      {shortens ? (
+      {ringIndex === -1 ? (
         <>
-          {/* Both forms sit in the DOM and CSS picks one, so the name is
-              announced once from here instead of twice from the two spans. */}
-          <span className="sr-only">{site.name}</span>
-          <span aria-hidden className="sm:hidden">
-            {nameWithRing(short)}
-          </span>
-          <span aria-hidden className="hidden sm:inline">
-            {nameWithRing(full)}
-          </span>
+          {name}
+          <span className="relative ml-2 inline-block size-[0.5em] align-middle">{ring}</span>
         </>
       ) : (
-        nameWithRing(full)
+        <>
+          {name.slice(0, ringIndex)}
+          <span className="relative inline-block">
+            {name[ringIndex]}
+            {ring}
+          </span>
+          {name.slice(ringIndex + 1)}
+        </>
       )}
     </span>
   )

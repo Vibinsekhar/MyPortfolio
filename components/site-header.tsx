@@ -122,7 +122,9 @@ export function SiteHeader() {
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           <ThemeToggle />
           {contact ? (
-            <Button href="#contact" variant="subtle" size="sm" className="hidden sm:inline-flex">
+            /* Hidden until the desktop nav appears — on a phone Contact is a
+               row in the menu, so the bar keeps only the two round buttons. */
+            <Button href="#contact" variant="subtle" size="sm" className="hidden md:inline-flex">
               {contact.label}
             </Button>
           ) : null}

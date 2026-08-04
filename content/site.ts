@@ -71,12 +71,6 @@ export type Testimonial = {
 // ---------------------------------------------------------------------------
 export const site = {
   name: "Vibin Sekhar J V",
-  /**
-   * A shorter form of the name for the header on phones, where the full one
-   * would crowd the theme toggle and the menu button. Set to null to always
-   * show `name`.
-   */
-  shortName: "Vibin J V" as string | null,
   /** Two or three initials. Used for the favicon and the header mark. */
   initials: "VS",
   role: "Full-Stack Developer", // TODO
