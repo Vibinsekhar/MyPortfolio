@@ -3,8 +3,11 @@
 A single-page developer portfolio built with Next.js 16 (App Router), React 19
 and Tailwind CSS v4. Dark by default, with a light variant behind a toggle.
 
-The visual language follows the **AARONN** style guide: Syne for headlines,
-Rubik for body copy, near-black surfaces, and a single orange accent.
+The visual language follows the **AARONN** style guide for type and shape —
+Syne for headlines, Rubik for body copy, pill buttons, hairline rules — painted
+in the neon palette carried over from the older portfolio: violet `#8066ff` and
+magenta `#cc66ff` on a `#0b0e14` ground, with cyan, pink and green available as
+`--neon-*` tokens.
 
 ---
 
@@ -139,7 +142,7 @@ stays readable. It is also wrapped in `prefers-reduced-motion: no-preference`.
 [`components/cursor.tsx`](components/cursor.tsx) replaces the pointer with the
 ring from the wordmark: a hard accent dot on the true pointer position, and a
 hairline ring easing in behind it. Over a link or button the ring opens and
-tints; over anything carrying `data-cursor-label` it fills solid orange and
+tints; over anything carrying `data-cursor-label` it fills solid accent and
 shows that word — the project covers say **View**, the email says **Email**.
 
 Add it to anything with `data-cursor-label="…"`. It renders only for a fine

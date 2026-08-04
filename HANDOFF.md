@@ -35,11 +35,19 @@ The owner supplied the **AARONN** portfolio template (Figma community file) as
 the target design. The style guide is implemented in `app/globals.css`:
 
 - **Type** — Syne (`font-display`) for headlines, Rubik (`font-sans`) for body.
-- **Colour** — dark-first. Near-black surfaces (`#191919` / `#202225`), one
-  orange accent (`#f89a4d`), greys from the guide's ramp. A light variant
-  exists behind the toggle with a darkened accent for AA contrast.
+- **Colour** — the AARONN greyscale structure, but repainted with the **neon
+  palette ported from the owner's older portfolio**
+  (`github.com/Vibinsekhar/Portfolio`, `src/index.css`). Dark-first:
+  `#0b0e14` page on `#121721` cards, violet accent `#8066ff`, magenta
+  `#cc66ff`, plus cyan / pink / green in `--neon-*`. The original orange
+  (`#f89a4d` on `#191919`) is gone. Light variant darkens the accent to
+  `#6a4dff` with white on top; every pairing was checked at ≥4.5:1.
 - **Shapes** — full-round pill buttons, `rounded-2xl` cards, hairline rules
   trailing card titles, soft radial glow at the top of the page.
+- **Motion** — also from the older portfolio, but rebuilt in CSS rather than
+  its GSAP + three.js stack: `text-gradient`, `glow-*`, `neon-border`,
+  `card-hover`, and the `float` / `pulse-glow` / `gradient-pan` / `spin-slow`
+  keyframes. All of it sits behind `prefers-reduced-motion`.
 
 Deviations from the template, and why:
 

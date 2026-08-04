@@ -3,7 +3,7 @@ import { Container } from "../section"
 import { site } from "@/content/site"
 
 /**
- * The closing call to action from the design: an orange line, then the email
+ * The closing call to action from the design: an accent rule, then the email
  * address at display size.
  *
  * Deliberately a mailto link rather than a form — there is no backend here,

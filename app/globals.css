@@ -5,39 +5,69 @@
    courtesy variant. See the inline script in app/layout.tsx. */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* Light variant — derived from the style guide's greyscale ramp.
-   The accent is darkened here so orange-on-white clears WCAG AA. */
+/* Palette ported from the "premium dark neon" system in the older portfolio
+   (github.com/Vibinsekhar/Portfolio, src/index.css). That file authors its
+   tokens as HSL triplets for shadcn; these are the same values converted to
+   hex and mapped onto this project's token names.
+
+   Light variant — the day version of the same ramp. White on the violet
+   accent clears AA (5.10:1), so `--accent-contrast` flips here. */
 :root {
-  --bg: #f9fafb;
+  --bg: #f6f7f9; /* 220 20% 97% */
   --surface: #ffffff;
-  --surface-2: #f4f4f6;
-  --border: #e5e6eb;
-  --border-strong: #d3d5da;
-  --fg: #161d21;
-  --muted: #6c727f;
-  --accent: #c96a17;
-  --accent-hover: #a95610;
+  --surface-2: #e8eaee; /* 220 15% 92% */
+  --border: #dcdfe5; /* 220 15% 88% */
+  --border-strong: #bec4cf;
+  --fg: #14181f; /* 220 20% 10% */
+  --muted: #676f7e; /* 220 10% 45% */
+  --accent: #6a4dff; /* 250 100% 65% */
+  --accent-hover: #441fff;
   --accent-contrast: #ffffff;
-  --accent-soft: rgba(201, 106, 23, 0.1);
-  --grid: rgba(22, 29, 33, 0.05);
-  --glow: rgba(22, 29, 33, 0.06);
+  --accent-soft: rgba(106, 77, 255, 0.1);
+  --grid: rgba(20, 24, 31, 0.05);
+  --glow: rgba(106, 77, 255, 0.1);
+
+  /* The five neon hues. Also the reference's chart palette. */
+  --neon-primary: #6a4dff;
+  --neon-secondary: #c44dff;
+  --neon-cyan: #00ffff;
+  --neon-pink: #ff3399;
+  --neon-green: #00ff80;
+
+  --gradient-primary: linear-gradient(135deg, #6a4dff, #c44dff);
+  --gradient-neon: linear-gradient(135deg, #6a4dff, #00ffff);
+  --glow-primary: 0 0 20px rgba(106, 77, 255, 0.5);
+  --glow-accent: 0 0 20px rgba(196, 77, 255, 0.5);
+  --glow-cyan: 0 0 20px rgba(0, 255, 255, 0.5);
 }
 
-/* The design as drawn. */
+/* The design as drawn: violet/magenta neon on near-black. */
 .dark {
-  --bg: #191919;
-  --surface: #202225;
-  --surface-2: #262a2c;
-  --border: #2e3234;
-  --border-strong: #3d4245;
-  --fg: #ffffff;
-  --muted: #9ea3ae;
-  --accent: #f89a4d;
-  --accent-hover: #ffab68;
-  --accent-contrast: #191919;
-  --accent-soft: rgba(248, 154, 77, 0.12);
+  --bg: #0b0e14; /* 220 30% 6% */
+  --surface: #121721; /* 220 30% 10% */
+  --surface-2: #1d2330; /* 220 25% 15% */
+  --border: #222a39; /* 220 25% 18% */
+  --border-strong: #364159;
+  --fg: #f1f2f4; /* 220 10% 95% */
+  --muted: #8f96a3; /* 220 10% 60% */
+  --accent: #8066ff; /* 250 100% 70% */
+  --accent-hover: #a28fff;
+  --accent-contrast: #0b0e14;
+  --accent-soft: rgba(128, 102, 255, 0.14);
   --grid: rgba(255, 255, 255, 0.04);
-  --glow: rgba(255, 255, 255, 0.09);
+  --glow: rgba(128, 102, 255, 0.14);
+
+  --neon-primary: #8066ff;
+  --neon-secondary: #cc66ff;
+  --neon-cyan: #1affff;
+  --neon-pink: #ff4da6;
+  --neon-green: #1aff8c;
+
+  --gradient-primary: linear-gradient(135deg, #8066ff, #cc66ff);
+  --gradient-neon: linear-gradient(135deg, #8066ff, #1affff);
+  --glow-primary: 0 0 30px rgba(128, 102, 255, 0.4);
+  --glow-accent: 0 0 30px rgba(204, 102, 255, 0.4);
+  --glow-cyan: 0 0 30px rgba(26, 255, 255, 0.4);
 }
 
 @theme inline {
@@ -52,6 +82,12 @@
   --color-accent-hover: var(--accent-hover);
   --color-accent-contrast: var(--accent-contrast);
   --color-accent-soft: var(--accent-soft);
+
+  --color-neon-primary: var(--neon-primary);
+  --color-neon-secondary: var(--neon-secondary);
+  --color-neon-cyan: var(--neon-cyan);
+  --color-neon-pink: var(--neon-pink);
+  --color-neon-green: var(--neon-green);
 
   /* Style guide: Syne for headlines, Rubik for everything else. */
   --font-display: var(--font-syne);
@@ -105,6 +141,129 @@
   flex: 1;
   height: 1px;
   background-color: var(--border-strong);
+}
+
+/* ---------------------------------------------------------------------------
+   Neon system — ported from the older portfolio's index.css.
+
+   Everything reads from the theme tokens above rather than hard-coding a hue,
+   so these all follow the light/dark switch. Anything that loops or moves is
+   behind `prefers-reduced-motion` at the bottom of this block.
+   ------------------------------------------------------------------------- */
+
+/* The headline treatment: the primary gradient clipped to the glyphs. */
+@utility text-gradient {
+  background-image: var(--gradient-primary);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@utility glow-primary {
+  box-shadow: var(--glow-primary);
+}
+@utility glow-accent {
+  box-shadow: var(--glow-accent);
+}
+@utility glow-cyan {
+  box-shadow: var(--glow-cyan);
+}
+
+/* 1px gradient rule drawn as a border, via a masked pseudo-element. */
+.neon-border {
+  position: relative;
+}
+.neon-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: var(--gradient-primary);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Card lift. The glow lands either way; only the travel is motion-gated. */
+.card-hover {
+  transition: transform 300ms ease-out, box-shadow 300ms ease-out;
+}
+.card-hover:hover {
+  box-shadow: var(--glow-primary);
+}
+
+/* Blurred colour blooms drifting behind the hero — the flat stand-in for the
+   reference's 5,000-point three.js field, at no JavaScript cost. */
+.orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(80px);
+  /* Lighter touch on the light theme, where they'd otherwise read as stains. */
+  opacity: 0.3;
+  will-change: transform;
+}
+.dark .orb {
+  opacity: 0.5;
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 20px color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 40px color-mix(in srgb, var(--accent) 60%, transparent);
+  }
+}
+
+@keyframes gradient-pan {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .card-hover:hover {
+    transform: translateY(-0.5rem);
+  }
+  .animate-float,
+  .orb {
+    animation: float 6s ease-in-out infinite;
+  }
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+  .animate-spin-slow {
+    animation: spin-slow 20s linear infinite;
+  }
+  /* Needs a background wider than the box to have somewhere to pan to. */
+  .animate-gradient-pan {
+    background-size: 220% 220%;
+    animation: gradient-pan 9s ease-in-out infinite;
+  }
 }
 
 /* ---------------------------------------------------------------------------
@@ -218,6 +377,24 @@
     transform: translateY(14px);
     transition: opacity 0.5s ease-out, transform 0.5s ease-out;
   }
+
+  /* Starting positions, matching the reference's fade-up / slide-left /
+     slide-right / scale-in keyframes. `data-reveal-from` is a separate
+     attribute because `data-reveal` is overwritten with "shown". */
+  .js [data-reveal-from="left"] {
+    transform: translateX(-40px);
+  }
+  .js [data-reveal-from="right"] {
+    transform: translateX(40px);
+  }
+  .js [data-reveal-from="scale"] {
+    transform: scale(0.94);
+  }
+  .js [data-reveal-from="fade"] {
+    transform: none;
+  }
+
+  /* Last, so it beats the equal-specificity rules above. */
   .js [data-reveal="shown"] {
     opacity: 1;
     transform: none;

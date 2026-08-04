@@ -27,7 +27,7 @@ function MetaRow({ label, children }: { label: string; children: React.ReactNode
 function ProjectCard({ project }: { project: Project }) {
   const cover = (
     <div
-      className={`relative overflow-hidden rounded-2xl border border-border bg-surface-2 ${
+      className={`card-hover relative overflow-hidden rounded-2xl border border-border bg-surface-2 ${
         project.featured ? "aspect-[16/10]" : "aspect-[4/3]"
       }`}
     >
@@ -141,8 +141,13 @@ export function Projects() {
         </Reveal>
 
         <div className="mt-14 grid gap-x-8 gap-y-14 sm:grid-cols-2">
+          {/* Two columns, so cards slide in from the side they sit on. */}
           {ordered.map((project, index) => (
-            <Reveal key={project.title} delay={(index % 2) * 100}>
+            <Reveal
+              key={project.title}
+              delay={(index % 2) * 100}
+              from={index % 2 === 0 ? "left" : "right"}
+            >
               <ProjectCard project={project} />
             </Reveal>
           ))}

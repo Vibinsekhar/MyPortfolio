@@ -9,13 +9,15 @@ import { site } from "@/content/site"
 
 const buttonBase =
   "group inline-flex items-center justify-center gap-2.5 rounded-full font-medium " +
-  "transition-colors duration-200 whitespace-nowrap"
+  "transition-[color,background-color,border-color,box-shadow] duration-200 whitespace-nowrap"
 
 const buttonVariants = {
-  /** Filled orange — the primary call to action. */
-  primary: "bg-accent text-accent-contrast hover:bg-accent-hover",
-  /** Orange hairline, transparent fill. */
-  outline: "border border-accent/70 text-fg hover:border-accent hover:text-accent",
+  /** Filled violet — the primary call to action. Picks up the neon glow. */
+  primary: "bg-accent text-accent-contrast hover:bg-accent-hover hover:shadow-[var(--glow-primary)]",
+  /** Violet hairline, transparent fill. */
+  outline:
+    "border border-accent/70 text-fg hover:border-accent hover:text-accent " +
+    "hover:shadow-[var(--glow-primary)]",
   /** Neutral hairline, used in the header. */
   subtle: "border border-border-strong text-fg hover:border-accent hover:text-accent",
 } as const

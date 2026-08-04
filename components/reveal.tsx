@@ -20,10 +20,21 @@ type Props = {
   as?: ElementType
   /** Stagger, in milliseconds, for items revealed as a group. */
   delay?: number
+  /**
+   * Where the element travels in from. The starting offsets live in
+   * globals.css; "up" is the default and needs no attribute.
+   */
+  from?: "up" | "left" | "right" | "scale" | "fade"
   className?: string
 }
 
-export function Reveal({ children, as: Tag = "div", delay = 0, className }: Props) {
+export function Reveal({
+  children,
+  as: Tag = "div",
+  delay = 0,
+  from = "up",
+  className,
+}: Props) {
   const ref = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -59,6 +70,7 @@ export function Reveal({ children, as: Tag = "div", delay = 0, className }: Prop
     <Tag
       ref={ref}
       data-reveal=""
+      data-reveal-from={from === "up" ? undefined : from}
       style={delay ? { transitionDelay: `${delay}ms` } : undefined}
       className={className}
     >

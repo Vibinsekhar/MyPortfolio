@@ -6,7 +6,7 @@ import { about, site } from "@/content/site"
 
 /**
  * Two columns: the bio on the left, a portrait on the right framed by the two
- * orange outline accents from the design. With no `site.photo` set, the frame
+ * accent outline offsets from the design. With no `site.photo` set, the frame
  * holds a monogram instead of an empty box.
  */
 export function About() {

@@ -17,9 +17,9 @@ export default function OpengraphImage() {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: 80,
-          background: "#191919",
+          background: "#0b0e14",
           backgroundImage:
-            "radial-gradient(60% 55% at 15% 0%, rgba(248,154,77,0.22) 0%, transparent 70%)",
+            "radial-gradient(60% 55% at 15% 0%, rgba(128,102,255,0.28) 0%, transparent 70%)",
           color: "#ffffff",
           fontFamily: "sans-serif",
         }}
@@ -33,8 +33,8 @@ export default function OpengraphImage() {
               width: 56,
               height: 56,
               borderRadius: 999,
-              border: "2px solid #f89a4d",
-              color: "#f89a4d",
+              border: "2px solid #8066ff",
+              color: "#8066ff",
               fontSize: 22,
               fontWeight: 700,
             }}
@@ -57,7 +57,7 @@ export default function OpengraphImage() {
           <div style={{ display: "flex", fontSize: 68, fontWeight: 700, lineHeight: 1.1 }}>
             {site.headline}
           </div>
-          <div style={{ display: "flex", fontSize: 28, color: "#9ea3ae" }}>{site.tagline}</div>
+          <div style={{ display: "flex", fontSize: 28, color: "#8f96a3" }}>{site.tagline}</div>
         </div>
 
         <div
@@ -66,10 +66,10 @@ export default function OpengraphImage() {
             justifyContent: "space-between",
             alignItems: "center",
             fontSize: 22,
-            color: "#9ea3ae",
+            color: "#8f96a3",
           }}
         >
-          <div style={{ display: "flex", color: "#f89a4d" }}>{site.role}</div>
+          <div style={{ display: "flex", color: "#8066ff" }}>{site.role}</div>
           <div style={{ display: "flex" }}>{site.url.replace(/^https?:\/\//, "")}</div>
         </div>
       </div>
